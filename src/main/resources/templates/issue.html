@@ -9,6 +9,13 @@
 <main class="form-page">
     <h1>Issue Book</h1>
     <div th:if="${error}" class="error" th:text="${error}"></div>
+<div class="info-card">
+    <h3>Issue Rules</h3>
+    <p>• Enter the student's name.</p>
+    <p>• Select a book with available copies.</p>
+    <p>• Issuing a book changes its status to ISSUED.</p>
+    <p>• The available quantity is automatically reduced.</p>
+</div>
     <form class="form-card" method="post" action="/issue">
         <label>Student Name <input name="studentName" required placeholder="Enter student name"></label>
         <label>Book
