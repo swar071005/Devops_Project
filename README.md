@@ -225,6 +225,7 @@ Maintain screenshots, logs, and reports for:
 - Docker image and running container
 - Docker Hub image publication
 - Ansible execution
+<<<<<<< HEAD
 - Health checks
 - Recovery or rollback demonstration
 Troubleshooting
@@ -252,3 +253,18 @@ Future Enhancements
 - Improved deployment automation and monitoring
 Conclusion
 The Dockerized Book Issue and Return System demonstrates how web application development can be integrated with DevOps practices. It combines library-management functionality with version control, automated builds and tests, containerization, deployment, and configuration management.
+=======
+- Health check
+- Rollback
+
+## Git Branching Strategy
+
+- `main` - Stable and release-ready code.
+- `develop` - Integration branch for completed features.
+- `feature/<name>` - Used for developing new features.
+- `bugfix/<name>` - Used for fixing defects.
+- `hotfix/<name>` - Used for urgent production fixes.
+
+Feature and bugfix branches are merged into `develop` after review.
+Release-ready changes are merged into `main`.
+>>>>>>> 4920149 (Document Git branching strategy)
