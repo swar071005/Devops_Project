@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Issue Book</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Records</a></div></nav>
+<main class="form-page">
+    <h1>Issue Book</h1>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <form class="form-card" method="post" action="/issue">
+        <label>Student Name <input name="studentName" required placeholder="Enter student name"></label>
+        <label>Book
+            <select name="bookId" required>
+                <option value="">Select a book</option>
+                <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title + ' — Available: ' + book.availableQuantity}" th:disabled="${book.availableQuantity == 0}"></option>
+            </select>
+        </label>
+        <button class="button" type="submit">Issue Book</button>
+    </form>
+</main>
+</body>
+</html>

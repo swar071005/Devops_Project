@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Devops Project - Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav>
+    <div class="brand">📚 Devops_Project</div>
+    <div>
+        <a href="/">Dashboard</a>
+        <a href="/books">Books</a>
+        <a href="/issue">Issue Book</a>
+        <a href="/issues">Issue/Return Records</a>
+    </div>
+</nav>
+
+<main>
+    <h1>Book Issue & Return System</h1>
+    <p class="subtitle">Dockerized Library Management MVP</p>
+
+    <section class="cards">
+        <div class="card"><span>Total Book Titles</span><strong th:text="${totalBooks}">0</strong></div>
+        <div class="card"><span>Total Copies</span><strong th:text="${totalCopies}">0</strong></div>
+        <div class="card"><span>Available Copies</span><strong th:text="${availableCopies}">0</strong></div>
+        <div class="card"><span>Currently Issued</span><strong th:text="${issuedCount}">0</strong></div>
+    </section>
+
+    <section class="panel">
+        <h2>Quick Actions</h2>
+        <a class="button" href="/books/new">+ Add Book</a>
+        <a class="button" href="/issue">Issue Book</a>
+        <a class="button secondary" href="/books">Search Books</a>
+    </section>
+</main>
+</body>
+</html>

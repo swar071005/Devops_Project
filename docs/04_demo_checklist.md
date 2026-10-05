@@ -1,0 +1,22 @@
+# Final Demo Checklist
+
+- [ ] Dashboard opens
+- [ ] Add book
+- [ ] Edit book
+- [ ] Delete book
+- [ ] Search book
+- [ ] Issue book
+- [ ] Return book
+- [ ] GitHub repository
+- [ ] Feature branch
+- [ ] Pull request
+- [ ] Merge conflict resolution
+- [ ] Jenkins build
+- [ ] Jenkins test
+- [ ] Selenium
+- [ ] Docker image
+- [ ] Docker container
+- [ ] Docker Hub
+- [ ] Ansible playbook
+- [ ] Health check
+- [ ] Rollback demonstration

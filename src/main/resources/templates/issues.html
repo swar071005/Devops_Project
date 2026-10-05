@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Issue Records</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Records</a></div></nav>
+<main>
+    <h1>Issue & Return Records</h1>
+    <div th:if="${param.success}" class="success" th:text="${param.success}"></div>
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>ID</th><th>Student</th><th>Book</th><th>Issue Date</th><th>Return Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>
+        <tr th:each="issue : ${issues}">
+            <td th:text="${issue.id}">1</td>
+            <td th:text="${issue.studentName}">Student</td>
+            <td th:text="${issue.book.title}">Book</td>
+            <td th:text="${issue.issueDate}">2026-01-01</td>
+            <td th:text="${issue.returnDate}">-</td>
+            <td><span class="status" th:classappend="${issue.status == 'ISSUED'} ? ' issued' : ' returned'" th:text="${issue.status}">ISSUED</span></td>
+            <td>
+                <form th:if="${issue.status == 'ISSUED'}" method="post" th:action="@{/return/{id}(id=${issue.id})}">
+                    <button class="small-button" type="submit">Return</button>
+                </form>
+                <span th:if="${issue.status != 'ISSUED'}">Completed</span>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(issues)}"><td colspan="7" class="empty">No issue records yet.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</main>
+</body>
+</html>
