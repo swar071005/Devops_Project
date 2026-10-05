@@ -145,3 +145,14 @@ Keep screenshots/logs for:
 - Ansible execution
 - Health check
 - Rollback
+
+## Git Branching Strategy
+
+- `main` - Stable and release-ready code.
+- `develop` - Integration branch for completed features.
+- `feature/<name>` - Used for developing new features.
+- `bugfix/<name>` - Used for fixing defects.
+- `hotfix/<name>` - Used for urgent production fixes.
+
+Feature and bugfix branches are merged into `develop` after review.
+Release-ready changes are merged into `main`.
