@@ -56,6 +56,14 @@ mvn -version
 docker --version
 docker compose version
 
+## Quick Run
+
+cd /workspaces/Devops_Project && \
+mvn clean package -DskipTests && \
+docker compose up --build -d && \
+docker compose ps
+
+
 Running Locally
 1. Clone the Repository
 git clone https://github.com/swar071005/Devops_Project.git
