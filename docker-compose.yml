@@ -1,3 +1,4 @@
+
 services:
   mysql:
     image: mysql:8.4
@@ -9,14 +10,23 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
 
   app:
     build: .
     container_name: devops-book-system
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      DB_URL: jdbc:mysql://mysql:3306/book_system
+      DB_URL: jdbc:mysql://host.docker.internal:3306/book_system
       DB_USERNAME: root
       DB_PASSWORD: root
     ports:
