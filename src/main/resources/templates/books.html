@@ -1,48 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Books</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Books - Book Issue & Return System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav>
-    <div class="brand">📚 Devops_Project</div>
-    <div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Issue/Return Records</a><a href="/books/new">Book Form</a><a href="/analytics">Analytics</a></div>
-</nav>
-<main>
-    <div class="page-head">
-        <div><h1>Book Management</h1><p class="subtitle">Create, view, update and search books.</p></div>
-        <a class="button" href="/books/new">+ Add New Book</a>
-    </div>
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">📚 DevOps Library</a>
+            <nav class="nav-links">
+                <a th:href="@{/}">Dashboard</a>
+                <a th:href="@{/books}" class="active">Books</a>
+                <a th:href="@{/books/new}">Add Book</a>
+                <a th:href="@{/issues/new}">Issue Book</a>
+                <a th:href="@{/issues}">Issue History</a>
+                <a th:href="@{/health}" target="_blank" class="badge-link">Health Check</a>
+            </nav>
+        </div>
+    </header>
 
-    <form class="search" method="get" action="/books">
-        <input name="q" th:value="${q}" placeholder="Search by title or author">
-        <button type="submit">Search</button>
-        <a href="/books">Clear</a>
-    </form>
+    <main class="container">
+        <div class="header-action">
+            <h2>Book Inventory</h2>
+            <a th:href="@{/books/new}" class="btn btn-primary">+ Add New Book</a>
+        </div>
 
-    <div th:if="${param.success}" class="success" th:text="${param.success}"></div>
+        <!-- Search Bar -->
+        <div class="search-box card">
+            <form th:action="@{/books}" method="get" class="search-form">
+                <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by title or author..." class="form-control">
+                <button type="submit" class="btn btn-secondary">Search</button>
+                <a th:if="${keyword != null}" th:href="@{/books}" class="btn btn-outline">Clear</a>
+            </form>
+        </div>
 
-    <div class="table-wrap">
-    <table>
-        <thead><tr><th>ID</th><th>Title</th><th>Author</th><th>ISBN</th><th>Category</th><th>Available</th><th>Actions</th></tr></thead>
-        <tbody>
-        <tr th:each="book : ${books}">
-            <td th:text="${book.id}">1</td>
-            <td th:text="${book.title}">Java</td>
-            <td th:text="${book.author}">Author</td>
-            <td th:text="${book.isbn}">123</td>
-            <td th:text="${book.category}">Programming</td>
-            <td th:text="${book.availableQuantity + ' / ' + book.quantity}">4 / 5</td>
-            <td>
-                <a class="small-button" th:href="@{/books/edit/{id}(id=${book.id})}">Edit</a>
-                <a class="small-button danger" th:href="@{/books/delete/{id}(id=${book.id})}" onclick="return confirm('Delete this book?')">Delete</a>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(books)}"><td colspan="7" class="empty">No books found.</td></tr>
-        </tbody>
-    </table>
-    </div>
-</main>
+        <!-- Books Table -->
+        <div class="card table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>ISBN</th>
+                        <th>Copies</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${books == null or #lists.isEmpty(books)}">
+                        <td colspan="6" class="text-center">No books found in the system.</td>
+                    </tr>
+                    <tr th:each="book : ${books}">
+                        <td th:text="${book.id}">1</td>
+                        <td class="font-bold" th:text="${book.title}">Sample Book Title</td>
+                        <td th:text="${book.author}">Sample Author</td>
+                        <td th:text="${book.isbn}">978-0000000000</td>
+                        <td>
+                            <span class="badge" th:text="${book.quantity != null ? book.quantity : (book.copies != null ? book.copies : 1)}">1</span>
+                        </td>
+                        <td class="action-buttons">
+                            <a th:href="@{/issues/new(bookId=${book.id})}" class="btn btn-sm btn-primary">Issue</a>
+                            <a th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-sm btn-edit">Edit</a>
+                            <a th:href="@{/books/delete/{id}(id=${book.id})}" class="btn btn-sm btn-delete" onclick="return confirm('Are you sure you want to delete this book?');">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 DevOps Book Issue & Return System | Academic Project</p>
+    </footer>
 </body>
 </html>
