@@ -7,18 +7,29 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 4s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
 
   app:
     build: .
     container_name: devops-book-system
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/book_system?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
       DB_URL: jdbc:mysql://mysql:3306/book_system
       DB_USERNAME: root
       DB_PASSWORD: root
     ports:
       - "8080:8080"
+    restart: on-failure
 
 volumes:
   mysql_data:
