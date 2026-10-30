@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "YOUR_DOCKER_USERNAME/devops-project"
-        IMAGE_TAG = "${BUILD_NUMBER}"
+        DOCKER = 'C:\\Users\\swars\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
     }
 
     stages {
@@ -25,33 +24,31 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Environment Check') {
             steps {
-                bat 'docker build -t %IMAGE_NAME%:%IMAGE_TAG% .'
+                bat '"%DOCKER%" --version'
+                bat '"%DOCKER%" compose version'
+                bat '"%DOCKER%" info'
             }
         }
 
-        stage('Docker Push') {
+        stage('Build and Deploy') {
             steps {
-                echo 'Configure Docker Hub credentials in Jenkins before enabling push.'
-                // withCredentials([usernamePassword(credentialsId: 'dockerhub',
-                // usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                //     bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
-                //     bat 'docker push %IMAGE_NAME%:%IMAGE_TAG%'
-                // }
+                bat '"%DOCKER%" compose up -d --build'
             }
         }
 
-        stage('Deploy') {
+        stage('Verify Deployment') {
             steps {
-                echo 'Deployment stage placeholder. Enable after Docker Hub credentials and target server are configured.'
+                bat '"%DOCKER%" compose ps'
             }
         }
     }
 
     post {
         always {
-            archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            archiveArtifacts artifacts: 'target/*.jar',
+                             fingerprint: true
         }
     }
 }
