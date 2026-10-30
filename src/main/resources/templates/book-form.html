@@ -1,22 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Book Form</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${book.id != null ? 'Edit Book' : 'Add Book'} - DevOps Library">Book Form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Issue/Return Records</a><a href="/books/new">Book Form</a><a href="/analytics">Analytics</a></div></nav>
-<main class="form-page">
-    <h1 th:text="${book.id == null ? 'Add New Book' : 'Edit Book'}">Add New Book</h1>
-    <form class="form-card" method="post" action="/books/save" th:object="${book}">
-        <input type="hidden" th:field="*{id}">
-        <label>Title <input th:field="*{title}" required></label>
-        <label>Author <input th:field="*{author}" required></label>
-        <label>ISBN <input th:field="*{isbn}"></label>
-        <label>Category <input th:field="*{category}"></label>
-        <label>Quantity <input type="number" min="0" th:field="*{quantity}" required></label>
-        <div><button class="button" type="submit">Save Book</button><a class="button secondary" href="/books">Cancel</a></div>
-    </form>
-</main>
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">📚 DevOps Library</a>
+            <nav class="nav-links">
+                <a th:href="@{/}">Dashboard</a>
+                <a th:href="@{/books}">Books</a>
+                <a th:href="@{/books/new}" class="active">Add Book</a>
+                <a th:href="@{/issues/new}">Issue Book</a>
+                <a th:href="@{/issues}">Issue History</a>
+                <a th:href="@{/health}" target="_blank" class="badge-link">Health Check</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card form-container">
+            <h2 th:text="${book.id != null ? 'Update Book Details' : 'Register New Book'}">Book Details</h2>
+            <form th:action="@{/books/save}" th:object="${book}" method="post">
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="form-group">
+                    <label for="title">Book Title <span class="required">*</span></label>
+                    <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="Enter title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Author <span class="required">*</span></label>
+                    <input type="text" id="author" th:field="*{author}" class="form-control" placeholder="Enter author name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="isbn">ISBN Code</label>
+                    <input type="text" id="isbn" th:field="*{isbn}" class="form-control" placeholder="e.g. 978-0132350884">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantity">Available Quantity</label>
+                    <input type="number" id="quantity" th:field="*{quantity}" min="1" class="form-control" value="1">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" th:text="${book.id != null ? 'Save Changes' : 'Add Book'}">Save</button>
+                    <a th:href="@{/books}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 DevOps Book Issue & Return System | Academic Project</p>
+    </footer>
 </body>
 </html>
