@@ -1,39 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Devops Project - Dashboard</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Book Issue & Return System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav>
-    <div class="brand">📚 Devops_Project</div>
-    <div>
-        <a href="/">Dashboard</a>
-        <a href="/books">Books</a>
-        <a href="/issue">Issue Book</a>
-        <a href="/issues">Issue/Return Records</a>
-        <a href="/books/new">Book Form</a>
-        <a href="/analytics">Analytics</a>
-    </div>
-</nav>
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">📚 DevOps Library</a>
+            <nav class="nav-links">
+                <a th:href="@{/}" class="active">Dashboard</a>
+                <a th:href="@{/books}">Books</a>
+                <a th:href="@{/books/new}">Add Book</a>
+                <a th:href="@{/issues/new}">Issue Book</a>
+                <a th:href="@{/issues}">Issue History</a>
+                <a th:href="@{/health}" target="_blank" class="badge-link">Health Check</a>
+            </nav>
+        </div>
+    </header>
 
-<main>
-    <h1>Book Issue & Return System</h1>
-    <p class="subtitle">Dockerized Library Management MVP</p>
+    <main class="container">
+        <section class="hero-section">
+            <h1>Library Management Dashboard</h1>
+            <p>Monitor book inventory, track issues and returns, and verify system operational status.</p>
+        </section>
 
-    <section class="cards">
-        <div class="card"><span>Total Book Titles</span><strong th:text="${totalBooks}">0</strong></div>
-        <div class="card"><span>Total Copies</span><strong th:text="${totalCopies}">0</strong></div>
-        <div class="card"><span>Available Copies</span><strong th:text="${availableCopies}">0</strong></div>
-        <div class="card"><span>Currently Issued</span><strong th:text="${issuedCount}">0</strong></div>
-    </section>
+        <section class="stats-grid">
+            <div class="card stat-card">
+                <span class="stat-icon">📖</span>
+                <div class="stat-info">
+                    <h3>Book Catalog</h3>
+                    <p>Manage and search books in stock</p>
+                    <a th:href="@{/books}" class="btn btn-outline">View Books</a>
+                </div>
+            </div>
 
-    <section class="panel">
-        <h2>Quick Actions</h2>
-        <a class="button" href="/books/new">+ Add Book</a>
-        <a class="button" href="/issue">Issue Book</a>
-        <a class="button secondary" href="/books">Search Books</a>
-    </section>
-</main>
+            <div class="card stat-card">
+                <span class="stat-icon">➕</span>
+                <div class="stat-info">
+                    <h3>Add New Book</h3>
+                    <p>Register new titles and quantities</p>
+                    <a th:href="@{/books/new}" class="btn btn-outline">Add Entry</a>
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <span class="stat-icon">🔄</span>
+                <div class="stat-info">
+                    <h3>Issue Book</h3>
+                    <p>Assign books to students or members</p>
+                    <a th:href="@{/issues/new}" class="btn btn-outline">Issue Now</a>
+                </div>
+            </div>
+
+            <div class="card stat-card">
+                <span class="stat-icon">📋</span>
+                <div class="stat-info">
+                    <h3>Issue Logs</h3>
+                    <p>Review active loans and return records</p>
+                    <a th:href="@{/issues}" class="btn btn-outline">View Logs</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="quick-links card">
+            <h2>Quick Actions</h2>
+            <div class="btn-group">
+                <a th:href="@{/books/new}" class="btn btn-primary">+ Add Book</a>
+                <a th:href="@{/issues/new}" class="btn btn-secondary">Issue Book</a>
+                <a th:href="@{/books}" class="btn btn-dark">Browse All Books</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 DevOps Book Issue & Return System | Academic Project</p>
+    </footer>
 </body>
 </html>
