@@ -1,36 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Issue Records</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue History - Book Issue & Return System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Issue/Return Records</a><a href="/books/new">Book Form</a><a href="/analytics">Analytics</a></div></nav>
-<main>
-    <h1>Issue & Return Records</h1>
-    <div th:if="${param.success}" class="success" th:text="${param.success}"></div>
-    <div class="table-wrap">
-    <table>
-        <thead><tr><th>ID</th><th>Student</th><th>Book</th><th>Issue Date</th><th>Return Date</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody>
-        <tr th:each="issue : ${issues}">
-            <td th:text="${issue.id}">1</td>
-            <td th:text="${issue.studentName}">Student</td>
-            <td th:text="${issue.book.title}">Book</td>
-            <td th:text="${issue.issueDate}">2026-01-01</td>
-            <td th:text="${issue.returnDate}">-</td>
-            <td><span class="status" th:classappend="${issue.status == 'ISSUED'} ? ' issued' : ' returned'" th:text="${issue.status}">ISSUED</span></td>
-            <td>
-                <form th:if="${issue.status == 'ISSUED'}" method="post" th:action="@{/return/{id}(id=${issue.id})}">
-                    <button class="small-button" type="submit">Return</button>
-                </form>
-                <span th:if="${issue.status != 'ISSUED'}">Completed</span>
-            </td>
-        </tr>
-        <tr th:if="${#lists.isEmpty(issues)}"><td colspan="7" class="empty">No issue records yet.</td></tr>
-        </tbody>
-    </table>
-    </div>
-</main>
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">📚 DevOps Library</a>
+            <nav class="nav-links">
+                <a th:href="@{/}">Dashboard</a>
+                <a th:href="@{/books}">Books</a>
+                <a th:href="@{/books/new}">Add Book</a>
+                <a th:href="@{/issues/new}">Issue Book</a>
+                <a th:href="@{/issues}" class="active">Issue History</a>
+                <a th:href="@{/health}" target="_blank" class="badge-link">Health Check</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="header-action">
+            <h2>Issue & Return Records</h2>
+            <a th:href="@{/issues/new}" class="btn btn-primary">+ Issue Another Book</a>
+        </div>
+
+        <div class="card table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Loan ID</th>
+                        <th>Book Title</th>
+                        <th>Student Name</th>
+                        <th>Roll No</th>
+                        <th>Issue Date</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${issues == null or #lists.isEmpty(issues)}">
+                        <td colspan="8" class="text-center">No issue records found.</td>
+                    </tr>
+                    <tr th:each="record : ${issues}">
+                        <td th:text="${record.id}">1</td>
+                        <td class="font-bold" th:text="${record.book != null ? record.book.title : (record.bookTitle != null ? record.bookTitle : 'N/A')}">Book Title</td>
+                        <td th:text="${record.studentName != null ? record.studentName : record.borrowerName}">Student Name</td>
+                        <td th:text="${record.studentId}">23104B0023</td>
+                        <td th:text="${record.issueDate}">2026-10-30</td>
+                        <td th:text="${record.returnDate != null ? record.returnDate : '-'}">-</td>
+                        <td>
+                            <span th:if="${record.returnDate == null and (record.status == null or record.status == 'ISSUED')}" class="badge badge-warning">ISSUED</span>
+                            <span th:if="${record.returnDate != null or record.status == 'RETURNED'}" class="badge badge-success">RETURNED</span>
+                        </td>
+                        <td>
+                            <a th:if="${record.returnDate == null and (record.status == null or record.status == 'ISSUED')}" 
+                               th:href="@{/issues/return/{id}(id=${record.id})}" 
+                               class="btn btn-sm btn-secondary" 
+                               onclick="return confirm('Confirm returning this book?');">
+                                Return
+                            </a>
+                            <span th:if="${record.returnDate != null or record.status == 'RETURNED'}" class="text-muted">Completed</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 DevOps Book Issue & Return System | Academic Project</p>
+    </footer>
 </body>
 </html>
