@@ -1,31 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Issue Book</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Issue Book - DevOps Library</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Issue/Return Records</a><a href="/books/new">Book Form</a><a href="/analytics">Analytics</a></div></nav>
-<main class="form-page">
-    <h1>Issue Book</h1>
-    <div th:if="${error}" class="error" th:text="${error}"></div>
-<div class="info-card">
-    <h3>Issue Rules</h3>
-    <p>• Enter the student's name.</p>
-    <p>• Select a book with available copies.</p>
-    <p>• Issuing a book changes its status to ISSUED.</p>
-    <p>• The available quantity is automatically reduced.</p>
-</div>
-    <form class="form-card" method="post" action="/issue">
-        <label>Student Name <input name="studentName" required placeholder="Enter student name"></label>
-        <label>Book
-            <select name="bookId" required>
-                <option value="">Select a book</option>
-                <option th:each="book : ${books}" th:value="${book.id}" th:text="${book.title + ' — Available: ' + book.availableQuantity}" th:disabled="${book.availableQuantity == 0}"></option>
-            </select>
-        </label>
-        <button class="button" type="submit">Issue Book</button>
-    </form>
-</main>
+    <header class="navbar">
+        <div class="nav-container">
+            <a th:href="@{/}" class="brand-logo">📚 DevOps Library</a>
+            <nav class="nav-links">
+                <a th:href="@{/}">Dashboard</a>
+                <a th:href="@{/books}">Books</a>
+                <a th:href="@{/books/new}">Add Book</a>
+                <a th:href="@{/issues/new}" class="active">Issue Book</a>
+                <a th:href="@{/issues}">Issue History</a>
+                <a th:href="@{/health}" target="_blank" class="badge-link">Health Check</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="card form-container">
+            <h2>Issue Book to Student</h2>
+            <form th:action="@{/issues/save}" method="post">
+                <div class="form-group">
+                    <label for="bookSelect">Select Book <span class="required">*</span></label>
+                    <select id="bookSelect" name="bookId" class="form-control" required>
+                        <option value="">-- Choose a book --</option>
+                        <option th:each="b : ${books}" 
+                                th:value="${b.id}" 
+                                th:text="${b.title + ' (by ' + b.author + ')'}" 
+                                th:selected="${selectedBookId != null and selectedBookId == b.id}">
+                            Book Title
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentName">Student / Borrower Name <span class="required">*</span></label>
+                    <input type="text" id="studentName" name="studentName" class="form-control" placeholder="Enter student full name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentId">Student Roll No / ID <span class="required">*</span></label>
+                    <input type="text" id="studentId" name="studentId" class="form-control" placeholder="e.g. 23104B0023" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="issueDate">Issue Date</label>
+                    <input type="date" id="issueDate" name="issueDate" class="form-control">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Confirm Issue</button>
+                    <a th:href="@{/books}" class="btn btn-outline">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 DevOps Book Issue & Return System | Academic Project</p>
+    </footer>
 </body>
 </html>
