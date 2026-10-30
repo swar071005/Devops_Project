@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a></div></nav>
+<nav><div class="brand">📚 Devops_Project</div><div><a href="/">Dashboard</a><a href="/books">Books</a><a href="/issue">Issue Book</a><a href="/issues">Issue/Return Records</a><a href="/books/new">Book Form</a><a href="/analytics">Analytics</a></div></nav>
 <main class="form-page">
     <h1 th:text="${book.id == null ? 'Add New Book' : 'Edit Book'}">Add New Book</h1>
     <form class="form-card" method="post" action="/books/save" th:object="${book}">
