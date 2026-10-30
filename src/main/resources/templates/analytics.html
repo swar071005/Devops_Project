@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Analytics</title>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<nav>
+    <div class="brand">📚 Devops_Project</div>
+    <div>
+        <a href="/">Dashboard</a>
+        <a href="/books">Books</a>
+        <a href="/issue">Issue Book</a>
+        <a href="/issues">Issue/Return Records</a>
+        <a href="/books/new">Book Form</a>
+        <a href="/analytics">Analytics</a>
+    </div>
+</nav>
+
+<main>
+<div class="page-head">
+    <div>
+        <h1>Library Analytics Dashboard</h1>
+        <p class="subtitle">Inventory, book issues and returns at a glance</p>
+    </div>
+</div>
+
+<section class="cards">
+    <div class="card">
+        <span>Book Titles</span>
+        <strong th:text="${totalTitles}">0</strong>
+    </div>
+
+    <div class="card">
+        <span>Total Copies</span>
+        <strong th:text="${totalCopies}">0</strong>
+    </div>
+
+    <div class="card">
+        <span>Available Copies</span>
+        <strong th:text="${availableCopies}">0</strong>
+    </div>
+
+    <div class="card">
+        <span>Currently Issued</span>
+        <strong th:text="${issuedCount}">0</strong>
+        <small><span th:text="${returnedCount}">0</span> returned records</small>
+    </div>
+</section>
+
+<div class="analytics-charts">
+
+    <section class="panel analytics-chart-panel">
+        <h3>Available vs Issued Copies</h3>
+        <div class="analytics-chart-container">
+            <canvas id="inventoryChart"></canvas>
+        </div>
+    </section>
+
+    <section class="panel analytics-chart-panel">
+        <h3>Books by Category</h3>
+        <div class="analytics-chart-container">
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </section>
+
+    <section class="panel analytics-chart-panel">
+        <h3>Most-Issued Books</h3>
+        <div class="analytics-chart-container">
+            <canvas id="popularChart"></canvas>
+        </div>
+    </section>
+
+    <section class="panel analytics-chart-panel">
+        <h3>Monthly Issues vs Returns</h3>
+        <div class="analytics-chart-container">
+            <canvas id="trendChart"></canvas>
+        </div>
+    </section>
+
+</div>
+</main>
+
+<script th:inline="javascript">
+    const availableCopies = /*[[${availableCopies}]]*/ 0;
+    const issuedCount = /*[[${issuedCount}]]*/ 0;
+
+    const categoryLabels = /*[[${categoryLabels}]]*/ [];
+    const categoryValues = /*[[${categoryValues}]]*/ [];
+
+    const mostIssuedLabels = /*[[${mostIssuedLabels}]]*/ [];
+    const mostIssuedValues = /*[[${mostIssuedValues}]]*/ [];
+
+    const monthLabels = /*[[${monthLabels}]]*/ [];
+    const monthlyIssues = /*[[${monthlyIssues}]]*/ [];
+    const monthlyReturns = /*[[${monthlyReturns}]]*/ [];
+
+    new Chart(document.getElementById('inventoryChart'), {
+        type: 'pie',
+        data: {
+            labels: ['Available', 'Currently Issued'],
+            datasets: [{
+                data: [availableCopies, issuedCount],
+                backgroundColor: ['#0d9488', '#e9bd70'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+            labels: categoryLabels,
+            datasets: [{
+                label: 'Total Copies',
+                data: categoryValues,
+                backgroundColor: '#0d9488',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('popularChart'), {
+        type: 'bar',
+        data: {
+            labels: mostIssuedLabels,
+            datasets: [{
+                label: 'Times Issued',
+                data: mostIssuedValues,
+                backgroundColor: '#142238',
+                borderRadius: 6
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { beginAtZero: true, ticks: { precision: 0 } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('trendChart'), {
+        type: 'line',
+        data: {
+            labels: monthLabels,
+            datasets: [
+                {
+                    label: 'Issues',
+                    data: monthlyIssues,
+                    borderColor: '#0d9488',
+                    backgroundColor: '#0d9488',
+                    tension: 0.3
+                },
+                {
+                    label: 'Returns',
+                    data: monthlyReturns,
+                    borderColor: '#e9bd70',
+                    backgroundColor: '#e9bd70',
+                    tension: 0.3
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, ticks: { precision: 0 } }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
