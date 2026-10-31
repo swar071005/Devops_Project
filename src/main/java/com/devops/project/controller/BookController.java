@@ -9,6 +9,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 public class BookController {
     private final BookService bookService;
@@ -90,5 +94,45 @@ public class BookController {
     public String returnBook(@PathVariable Long id) {
         issueService.returnBook(id);
         return "redirect:/issues?success=Book+returned+successfully";
+    }
+
+    @GetMapping("/analytics")
+    public String showAnalytics(Model model) {
+        List<Book> books = bookService.findAll();
+
+        int totalTitles = books.size();
+        int totalCopies = books.stream()
+                .mapToInt(b -> b.getQuantity() != null ? b.getQuantity() : 0)
+                .sum();
+        int availableCopies = books.stream()
+                .mapToInt(b -> b.getAvailableQuantity() != null ? b.getAvailableQuantity() : 0)
+                .sum();
+        int issuedCopies = Math.max(0, totalCopies - availableCopies);
+        double utilizationRate = totalCopies > 0 ? ((double) issuedCopies / totalCopies) * 100 : 0.0;
+
+        Map<String, Long> categoryCountMap = books.stream()
+                .collect(Collectors.groupingBy(
+                        b -> (b.getCategory() != null && !b.getCategory().isBlank()) ? b.getCategory() : "Uncategorized",
+                        Collectors.counting()
+                ));
+
+        Map<String, Integer> categoryStockMap = books.stream()
+                .collect(Collectors.groupingBy(
+                        b -> (b.getCategory() != null && !b.getCategory().isBlank()) ? b.getCategory() : "Uncategorized",
+                        Collectors.summingInt(b -> b.getQuantity() != null ? b.getQuantity() : 0)
+                ));
+
+        model.addAttribute("totalTitles", totalTitles);
+        model.addAttribute("totalCopies", totalCopies);
+        model.addAttribute("availableCopies", availableCopies);
+        model.addAttribute("issuedCopies", issuedCopies);
+        model.addAttribute("utilizationRate", String.format("%.1f", utilizationRate));
+
+        model.addAttribute("categoryLabels", categoryCountMap.keySet().stream().toList());
+        model.addAttribute("categoryCounts", categoryCountMap.values().stream().toList());
+        model.addAttribute("categoryStock", categoryStockMap.values().stream().toList());
+        model.addAttribute("categoryStockMap", categoryStockMap);
+
+        return "analytics";
     }
 }
